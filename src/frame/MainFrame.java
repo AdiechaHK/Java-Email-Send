@@ -10,9 +10,9 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import action.Mail;
+import mailer.Mail;
 
-public class MainFrame extends JFrame implements ActionListener{
+public class MainFrame extends JFrame implements ActionListener, Runnable{
 
 	/**
 	 * @author hk
@@ -97,20 +97,30 @@ public class MainFrame extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		
-		// For text fields => method => getText();
-		// For password fields => method => getPassword();
-		
-		statusText.setText("Please Wait..");
-		  sendMail.setEnabled(false);
+		Thread t = new Thread(this);
+		t.start();
+	}
 
-		  final String user= mailFrom.getText();
-		  final String password=new String(pass.getPassword());
-		  String subject = msgSub.getText();
-		  String body = msgBody.getText();
-		  String to = mailTo.getText();
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		statusText.setText("Please Wait . . .");
+		sendMail.setEnabled(false);
 
-		   Mail mail = new Mail(to, user, password, subject, body, this);
-		   mail.start();
+		final String user= mailFrom.getText();
+		final String password=new String(pass.getPassword());
+		String subject = msgSub.getText();
+		String body = msgBody.getText();
+		String to = mailTo.getText();
+
+		Mail mail = new Mail();
+		mail.setTo(to);
+		mail.setUser(user);
+		mail.setPassword(password);
+		mail.setSubject(subject);
+		mail.setBody(body);		   
+		if(mail.send()) statusText.setText("Successfully Send . . . ");
+		else statusText.setText("Send Fails . . .");
+		sendMail.setEnabled(false);
 	}	
 }
