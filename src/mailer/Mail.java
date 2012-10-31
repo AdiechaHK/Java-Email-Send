@@ -12,11 +12,11 @@ import javax.mail.internet.MimeMessage;
 
 public class Mail {
 	
-	  String user;
-	  String password;
-	  String subject;
-	  String body;
-	  String to;
+	String user;
+	String password;
+	String subject;
+	String body;
+	String to;
 	
 	public void setUser(String user) {
 		this.user = user;
@@ -39,39 +39,39 @@ public class Mail {
 	}
 	
 	public boolean send() {
-		  boolean state;
-		  String host="smtp.gmail.com";
-		   Properties props = new Properties();
-		   props.put("mail.smtp.host",host);
-		   props.put("mail.smtp.auth", "true");
-		   props.setProperty("mail.smtp.port", "" + 587);
-		   props.setProperty("mail.smtp.starttls.enable", "true");
+		boolean state;
+		String host="smtp.gmail.com";
+		Properties props = new Properties();
+		props.put("mail.smtp.host",host);
+		props.put("mail.smtp.auth", "true");
+		props.setProperty("mail.smtp.port", "" + 587);
+		props.setProperty("mail.smtp.starttls.enable", "true");
 		   
-		   Session session = Session.getDefaultInstance(props,
-		    new javax.mail.Authenticator() {
-		      protected PasswordAuthentication getPasswordAuthentication() {
-			return new PasswordAuthentication(user,password);
-		      }
-		    });
+		Session session = Session.getDefaultInstance(props,
+				new javax.mail.Authenticator() {
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication(user,password);
+					}
+		    	});
 
-		   //Compose the message
-		    try {
-		     MimeMessage message = new MimeMessage(session);
-		     message.setFrom(new InternetAddress(user));
-		     message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));
-		     message.setSubject(subject);
-		     message.setText(body);
+		//Compose the message
+		try {
+			MimeMessage message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(user));
+			message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));
+			message.setSubject(subject);
+			message.setText(body);
 		     
-		    //send the message
-		     Transport.send(message);
+			//send the message
+			Transport.send(message);
 
-		     System.out.println("message sent successfully...");
-	    	 state = true;
+			System.out.println("message sent successfully...");
+			state = true;
 
-		     } catch (MessagingException e2) {
-		    	 e2.printStackTrace();
-		    	 state = false;
-		     }
-		   return state;
+		} catch (MessagingException e2) {
+			e2.printStackTrace();
+			state = false;
+		}
+		return state;
 	}
 }
